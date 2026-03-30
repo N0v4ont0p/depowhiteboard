@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✦ WhiteBoard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════ Loading Screen ══════════════════ -->
+  <div id="loading-screen">
+    <div class="loading-inner">
+      <div class="loading-logo">
+        <span class="logo-star">✦</span>
+        <span class="logo-text">WhiteBoard</span>
+      </div>
+      <div class="loading-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <p class="loading-label">Connecting…</p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════ App Shell ═══════════════════════ -->
+  <div class="app" id="app" style="display:none">
+
+    <!-- ── Header ──────────────────────────────────────────────────────── -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <span class="logo-star">✦</span>
+          <span class="logo-name">WhiteBoard</span>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="room-pill">
+          <i class="fa-solid fa-door-open"></i>
+          <span id="room-id-display">—</span>
+        </div>
+        <button class="btn-share" id="copy-link-btn" title="Copy share link">
+          <i class="fa-solid fa-link"></i>
+          <span>Share</span>
+        </button>
+      </div>
+
+      <div class="header-right">
+        <div class="user-info" id="user-info">
+          <div class="user-dot" id="my-dot" title="You"></div>
+          <div class="user-avatars" id="user-avatars"></div>
+          <span class="user-count-badge" id="user-count">1</span>
+          <span class="user-count-label">online</span>
+        </div>
+        <button class="btn-icon" id="download-btn" title="Download as PNG (Ctrl+S)">
+          <i class="fa-solid fa-download"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ── Main area ────────────────────────────────────────────────────── -->
+    <div class="main-area">
+
+      <!-- Left Toolbar -->
+      <aside class="toolbar">
+        <div class="tool-section">
+          <button class="tool-btn active" data-tool="pen"         title="Pen [P]">         <i class="fa-solid fa-pen"></i>          </button>
+          <button class="tool-btn"        data-tool="brush"       title="Brush [B]">        <i class="fa-solid fa-paintbrush"></i>   </button>
+          <button class="tool-btn"        data-tool="marker"      title="Marker [M]">       <i class="fa-solid fa-marker"></i>       </button>
+          <button class="tool-btn"        data-tool="highlighter" title="Highlighter [H]">  <i class="fa-solid fa-highlighter"></i>  </button>
+          <button class="tool-btn"        data-tool="eraser"      title="Eraser [E]">       <i class="fa-solid fa-eraser"></i>       </button>
+        </div>
+
+        <div class="tool-divider"></div>
+
+        <div class="tool-section">
+          <button class="tool-btn" data-tool="line"   title="Line [L]">      <i class="fa-solid fa-minus"></i>         </button>
+          <button class="tool-btn" data-tool="arrow"  title="Arrow [A]">     <i class="fa-solid fa-arrow-right"></i>   </button>
+          <button class="tool-btn" data-tool="rect"   title="Rectangle [R]"> <i class="fa-regular fa-square"></i>      </button>
+          <button class="tool-btn" data-tool="circle" title="Circle [C]">    <i class="fa-regular fa-circle"></i>      </button>
+        </div>
+
+        <div class="tool-divider"></div>
+
+        <div class="tool-section">
+          <button class="tool-btn" data-tool="text" title="Text [T]">        <i class="fa-solid fa-font"></i>          </button>
+          <button class="tool-btn" data-tool="fill" title="Fill [F]">        <i class="fa-solid fa-fill-drip"></i>     </button>
+        </div>
+
+        <div class="tool-divider"></div>
+
+        <div class="tool-section">
+          <button class="action-btn" data-action="undo"  title="Undo [Ctrl+Z]">  <i class="fa-solid fa-rotate-left"></i>  </button>
+          <button class="action-btn" data-action="redo"  title="Redo [Ctrl+Y]">  <i class="fa-solid fa-rotate-right"></i> </button>
+          <button class="action-btn" data-action="clear" title="Clear board">     <i class="fa-solid fa-trash"></i>        </button>
+        </div>
+      </aside>
+
+      <!-- Canvas Area -->
+      <main class="canvas-area" id="canvas-container">
+        <canvas id="canvas"></canvas>
+        <div id="cursors"></div>
+        <div id="text-input-container"></div>
+      </main>
+
+    </div><!-- end .main-area -->
+
+    <!-- ── Bottom Bar ────────────────────────────────────────────────────── -->
+    <footer class="bottom-bar">
+
+      <!-- Current color preview + palette -->
+      <div class="bottom-section colors-section">
+        <div class="current-color-wrap">
+          <button class="current-color-btn" id="current-color-btn" title="Open color picker">
+            <span id="current-color-dot"></span>
+          </button>
+          <input type="color" id="color-picker" value="#000000" title="Custom color" />
+        </div>
+        <div class="color-palette" id="color-palette"></div>
+      </div>
+
+      <div class="bottom-divider"></div>
+
+      <!-- Brush size -->
+      <div class="bottom-section size-section">
+        <label class="bottom-label"><i class="fa-solid fa-circle-dot"></i> Size</label>
+        <input type="range" id="size-slider" min="1" max="80" value="5" />
+        <div class="size-preview-wrap">
+          <div class="size-preview" id="size-preview"></div>
+        </div>
+        <span class="size-label" id="size-label">5</span>
+      </div>
+
+      <div class="bottom-divider"></div>
+
+      <!-- Opacity -->
+      <div class="bottom-section opacity-section">
+        <label class="bottom-label"><i class="fa-solid fa-droplet"></i> Opacity</label>
+        <input type="range" id="opacity-slider" min="10" max="100" value="100" />
+        <span class="opacity-label" id="opacity-label">100%</span>
+      </div>
+
+      <div class="bottom-divider"></div>
+
+      <!-- Fill toggle (shapes) -->
+      <div class="bottom-section fill-section">
+        <label class="toggle-label" title="Fill shapes with color">
+          <span class="toggle-text"><i class="fa-solid fa-fill"></i> Fill</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="fill-toggle" />
+            <span class="toggle-slider"></span>
+          </label>
+        </label>
+      </div>
+
+    </footer>
+
+  </div><!-- end .app -->
+
+  <!-- Toast container -->
+  <div id="toast-container"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
