@@ -900,8 +900,10 @@ class WhiteboardApp {
     app.style.display = 'grid';
     setTimeout(() => {
       ls.classList.add('hidden');
-      // Trigger resize now that the app is visible
+      // Trigger resize now that the app is visible, then redraw
+      // strokes on the correctly-sized canvas
       this.resize();
+      this.redrawAll();
     }, 300);
   }
 

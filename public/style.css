@@ -237,7 +237,6 @@ input  { font-family: inherit; }
    Toolbar (left)
    ═══════════════════════════════════════════════════════════════════════════ */
 .toolbar {
-  grid-area: toolbar;
   background: var(--mantle);
   border-right: 1px solid var(--surface0);
   display: flex;
@@ -337,6 +336,7 @@ input  { font-family: inherit; }
 .canvas-area {
   position: relative;
   overflow: hidden;
+  min-height: 0;
   background:
     radial-gradient(circle, rgba(180,190,220,0.35) 1px, transparent 1px);
   background-size: 24px 24px;
@@ -399,7 +399,8 @@ input  { font-family: inherit; }
    Bottom bar
    ═══════════════════════════════════════════════════════════════════════════ */
 .bottom-bar {
-  grid-area: bottom;
+  grid-column: 1 / -1;
+  grid-row: 3;
   background: var(--mantle);
   border-top: 1px solid var(--surface0);
   display: flex;
