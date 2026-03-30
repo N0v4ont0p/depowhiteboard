@@ -219,6 +219,9 @@ class WhiteboardApp {
   setupCanvas() {
     const cv = this.canvas;
 
+    // Set initial cursor based on default tool
+    cv.style.cursor = TOOL_CURSORS[this.tool] || 'crosshair';
+
     const pos = (e) => {
       const r = cv.getBoundingClientRect();
       const src = e.touches ? e.touches[0] : e;
