@@ -5,16 +5,26 @@ const http = require('http');
 const { Server } = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 const server = http.createServer(app);
+
 // Allow all origins for a share-with-friends whiteboard.
-// In production you would restrict this to your own domain, e.g.:
-//   cors: { origin: 'https://yourdomain.com' }
+// In production restrict this: set ALLOWED_ORIGIN env var to your domain.
 const io = new Server(server, {
   cors: { origin: process.env.ALLOWED_ORIGIN || '*' },
   maxHttpBufferSize: 1e7,   // 10 MB — large enough for stroke payloads
 });
+
+// ─── Rate limiting ─────────────────────────────────────────────────────────
+const limiter = rateLimit({
+  windowMs: 60 * 1000,   // 1 minute window
+  max: 120,              // max 120 requests per IP per window
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
