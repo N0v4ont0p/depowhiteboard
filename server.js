@@ -26,9 +26,7 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Redirect bare "/" to a new room
+// Redirect bare "/" to a new room, or serve the app if room param is present
 app.get('/', (req, res) => {
   if (!req.query.room) {
     const roomId = uuidv4().replace(/-/g, '').slice(0, 8);
@@ -36,6 +34,8 @@ app.get('/', (req, res) => {
   }
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ─── In-memory room storage ────────────────────────────────────────────────
 const rooms = new Map();
